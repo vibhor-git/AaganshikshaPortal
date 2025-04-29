@@ -41,7 +41,7 @@ def index():
         attendance_data = db.session.query(
             Attendance.date, 
             db.func.count(Attendance.id).label('total'), 
-            db.func.sum(db.case([(Attendance.status == 'present', 1)], else_=0)).label('present')
+            db.func.sum(db.case((Attendance.status == 'present', 1), else_=0)).label('present')
         ).filter(
             Attendance.student_id.in_([s.id for s in students]),
             Attendance.date.between(start_of_week, end_of_week)
