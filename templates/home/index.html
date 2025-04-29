@@ -24,6 +24,50 @@
     </div>
 </section>
 
+<!-- Carousel Section -->
+<section class="py-5">
+    <div class="container">
+        <div id="homeCarousel" class="carousel slide rounded-4 overflow-hidden shadow-lg" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://img.freepik.com/free-photo/teacher-helping-kids-computer-class_23-2149038607.jpg?w=1380&t=st=1682682145~exp=1682682745~hmac=8a68747efc9a4fe4639cdac844b12045a59fd2a94a81ee9af26d8e0a1f2e970e" class="d-block w-100" alt="Children in classroom" style="height: 500px; object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block" style="background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); border-radius: 10px; padding: 20px;">
+                        <h2 class="fw-bold">Quality Early Education</h2>
+                        <p class="lead">Providing the foundation for lifelong learning and development</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://img.freepik.com/free-photo/children-classroom-learning-with-teacher_23-2149038598.jpg?w=1380&t=st=1682682107~exp=1682682707~hmac=b92f9a8e0319ce9f7af262f26e36a6e8fc22d5fa2de5f06f893f4f69b3e80590" class="d-block w-100" alt="Children playing" style="height: 500px; object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block" style="background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); border-radius: 10px; padding: 20px;">
+                        <h2 class="fw-bold">Nutrition & Wellness</h2>
+                        <p class="lead">Ensuring healthy growth through balanced nutrition and care</p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="https://img.freepik.com/free-photo/children-enjoying-activities-together-kindergarten_23-2149244201.jpg?w=1380&t=st=1682682196~exp=1682682796~hmac=e8be94af9ff4dc55677015cc9c7a34f25ed8be61e518ac825fd5baa5de71a3f1" class="d-block w-100" alt="Children activities" style="height: 500px; object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block" style="background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px); border-radius: 10px; padding: 20px;">
+                        <h2 class="fw-bold">Engaging Activities</h2>
+                        <p class="lead">Fun and educational activities designed for holistic development</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</section>
+
 <!-- Features Section -->
 <section class="py-5">
     <div class="container">
@@ -355,6 +399,18 @@
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Carousel with 5 second interval (5000ms)
+        const homeCarousel = document.getElementById('homeCarousel');
+        if (homeCarousel) {
+            const carousel = new bootstrap.Carousel(homeCarousel, {
+                interval: 5000,  // 5 seconds
+                wrap: true,
+                keyboard: true,
+                pause: 'hover',
+                touch: true
+            });
+        }
+        
         // Initialize AOS (Animate on Scroll)
         if (typeof AOS !== 'undefined') {
             AOS.init({
