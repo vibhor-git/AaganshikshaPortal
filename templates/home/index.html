@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}Aaganshiksha - Home{% endblock %}
+
+{% block content %}
+<!-- Carousel Section -->
+<section class="carousel-section">
+    <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="carousel-bg bg-primary d-flex align-items-center justify-content-center" style="height: 500px;">
+                    <div class="text-center text-white p-5">
+                        <h2 class="display-4">Welcome to Aaganshiksha</h2>
+                        <p class="lead">A digital platform connecting Aganwadi centers with students, parents, and educators.</p>
+                        <a href="{{ url_for('home.about') }}" class="btn btn-outline-light mt-3">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="carousel-bg bg-success d-flex align-items-center justify-content-center" style="height: 500px;">
+                    <div class="text-center text-white p-5">
+                        <h2 class="display-4">Nutrition & Health</h2>
+                        <p class="lead">Promoting balanced nutrition and healthy habits for early childhood development.</p>
+                        <a href="#nutrition-section" class="btn btn-outline-light mt-3">View Nutrition Tips</a>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="carousel-bg bg-info d-flex align-items-center justify-content-center" style="height: 500px;">
+                    <div class="text-center text-white p-5">
+                        <h2 class="display-4">Learning Activities</h2>
+                        <p class="lead">Engaging activities that promote cognitive, social, and physical development.</p>
+                        <a href="#activity-section" class="btn btn-outline-light mt-3">View Activities</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</section>
+
+<!-- About Us Section -->
+<section class="about-section py-5" id="about-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2 class="section-title">About Aaganshiksha</h2>
+                <p class="lead">Transforming early childhood education through digital integration.</p>
+                <p>Aaganshiksha website ka maqsad Aganwadi centres se jude students ke parents, teachers aur admin ke liye ek centralized digital platform provide karna hai.</p>
+                <p>We aim to enhance the quality of early childhood education by providing tools for better administration, communication, and monitoring.</p>
+                <a href="{{ url_for('home.about') }}" class="btn btn-primary mt-3">Read More</a>
+            </div>
+            <div class="col-lg-6">
+                <div class="card bg-dark text-white">
+                    <div class="card-body">
+                        <h3 class="card-title">Our Mission</h3>
+                        <p class="card-text">To empower Aganwadi centers through digital transformation, ensuring quality early childhood education and care.</p>
+                        
+                        <h3 class="card-title mt-4">Our Vision</h3>
+                        <p class="card-text">Creating a network of digitally connected Aganwadi centers that provide excellence in early childhood development across India.</p>
+                        
+                        <h3 class="card-title mt-4">Our Values</h3>
+                        <ul class="card-text">
+                            <li>Child-Centric Approach</li>
+                            <li>Community Engagement</li>
+                            <li>Digital Inclusion</li>
+                            <li>Transparency & Accountability</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Nutrition Tips Section -->
+<section class="nutrition-section py-5 bg-light" id="nutrition-section">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Nutrition Tips</h2>
+        <div class="row">
+            {% if nutrition_tips %}
+                {% for tip in nutrition_tips %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ tip.title }}</h5>
+                                <p class="card-text">{{ tip.content }}</p>
+                            </div>
+                            <div class="card-footer text-muted">
+                                <small>Posted on {{ tip.created_at.strftime('%Y-%m-%d') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>No nutrition tips available at the moment.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Activity Section -->
+<section class="activity-section py-5" id="activity-section">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Activities & Programs</h2>
+        <div class="row">
+            {% if activities %}
+                {% for activity in activities %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ activity.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ activity.date.strftime('%Y-%m-%d') }}</h6>
+                                <p class="card-text">{{ activity.description }}</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="btn btn-sm btn-outline-primary">Learn More</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>No activities available at the moment.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Complaint/Feedback Section -->
+<section class="complaint-section py-5 bg-light" id="complaint-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Submit Feedback or Complaint</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('home.submit_complaint') }}">
+                            {{ complaint_form.hidden_tag() }}
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Your Name</label>
+                                {{ complaint_form.name(class="form-control", placeholder="Enter your full name") }}
+                                {% if complaint_form.name.errors %}
+                                    <div class="text-danger">
+                                        {% for error in complaint_form.name.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                {{ complaint_form.email(class="form-control", placeholder="Enter your email address") }}
+                                {% if complaint_form.email.errors %}
+                                    <div class="text-danger">
+                                        {% for error in complaint_form.email.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">Subject</label>
+                                {{ complaint_form.subject(class="form-control", placeholder="Enter the subject of your complaint/feedback") }}
+                                {% if complaint_form.subject.errors %}
+                                    <div class="text-danger">
+                                        {% for error in complaint_form.subject.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message</label>
+                                {{ complaint_form.message(class="form-control", rows=5, placeholder="Please describe your complaint or feedback in detail") }}
+                                {% if complaint_form.message.errors %}
+                                    <div class="text-danger">
+                                        {% for error in complaint_form.message.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="d-grid">
+                                {{ complaint_form.submit(class="btn btn-primary") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize Bootstrap Carousel with 5-second interval
+    document.addEventListener('DOMContentLoaded', function() {
+        var myCarousel = document.querySelector('#mainCarousel');
+        var carousel = new bootstrap.Carousel(myCarousel, {
+            interval: 5000,
+            wrap: true
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Aaganshiksha - About Us{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <h1 class="text-center mb-5">About Aaganshiksha</h1>
+            
+            <div class="card mb-5">
+                <div class="card-body">
+                    <h2 class="card-title">Our Mission</h2>
+                    <p class="card-text">Aaganshiksha website ka maqsad Aganwadi centres se jude students ke parents, teachers aur admin ke liye ek centralized digital platform provide karna hai. We aim to enhance the quality of early childhood education by providing tools for better administration, communication, and monitoring.</p>
+                    
+                    <h2 class="card-title mt-4">Our Vision</h2>
+                    <p class="card-text">Creating a network of digitally connected Aganwadi centers that provide excellence in early childhood development across India. We envision a future where every child has access to quality early education, nutrition, and care through a well-managed Aganwadi system.</p>
+                </div>
+            </div>
+            
+            <div class="card mb-5">
+                <div class="card-body">
+                    <h2 class="card-title">Our Objectives</h2>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">To provide a centralized platform for managing Aganwadi operations</li>
+                        <li class="list-group-item">To improve communication between parents, teachers, and administrators</li>
+                        <li class="list-group-item">To facilitate better tracking of student attendance and development</li>
+                        <li class="list-group-item">To ensure proper management of resources and inventory</li>
+                        <li class="list-group-item">To share educational content, nutritional tips, and activities</li>
+                        <li class="list-group-item">To enable data-driven decision making through reports and analytics</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card mb-5">
+                <div class="card-body">
+                    <h2 class="card-title">Our History</h2>
+                    <p class="card-text">Aaganshiksha was founded with the vision of bringing digital transformation to the Aganwadi ecosystem. Recognizing the challenges faced by these centers in terms of resource management, attendance tracking, and communication, we developed a comprehensive platform to address these issues.</p>
+                    <p class="card-text">Our journey began with extensive research and consultations with Aganwadi workers, administrators, and parents to understand their specific needs and challenges. This led to the development of a user-friendly, feature-rich platform designed specifically for the Aganwadi context.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Centers Section -->
+    <h2 class="text-center mb-4">Our Centers</h2>
+    <div class="row">
+        {% if centers %}
+            {% for center in centers %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ center.name }}</h5>
+                            <p class="card-text">
+                                <i class="fas fa-map-marker-alt me-2"></i> {{ center.address }}<br>
+                                {% if center.contact_number %}
+                                    <i class="fas fa-phone me-2"></i> {{ center.contact_number }}<br>
+                                {% endif %}
+                                {% if center.email %}
+                                    <i class="fas fa-envelope me-2"></i> {{ center.email }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-sm btn-outline-primary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <p>No centers available at the moment.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Team Section -->
+    <h2 class="text-center my-5">Our Team</h2>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-user-circle fa-5x mb-3"></i>
+                    <h5 class="card-title">Dr. Rajesh Kumar</h5>
+                    <p class="card-text text-muted">Project Director</p>
+                    <p class="card-text">20+ years of experience in child development and education policy.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-user-circle fa-5x mb-3"></i>
+                    <h5 class="card-title">Priya Sharma</h5>
+                    <p class="card-text text-muted">Program Coordinator</p>
+                    <p class="card-text">Specialist in early childhood nutrition and health programs.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-user-circle fa-5x mb-3"></i>
+                    <h5 class="card-title">Amit Patel</h5>
+                    <p class="card-text text-muted">Technical Director</p>
+                    <p class="card-text">Expert in developing educational technology solutions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
