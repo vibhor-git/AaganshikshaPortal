@@ -1,11 +1,12 @@
 import os
 import logging
 
-from flask import Flask
+from flask import Flask, g
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect, generate_csrf
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -15,6 +16,9 @@ class Base(DeclarativeBase):
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(model_class=Base)
+
+# Initialize CSRF protection
+csrf = CSRFProtect()
 
 # Create the Flask app
 app = Flask(__name__)
@@ -28,9 +32,18 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_pre_ping": True,
 }
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["WTF_CSRF_ENABLED"] = True
 
 # Initialize database
 db.init_app(app)
+
+# Initialize CSRF protection
+csrf.init_app(app)
+
+# Make csrf_token available to all templates
+@app.context_processor
+def inject_csrf_token():
+    return dict(csrf_token=generate_csrf)
 
 # Initialize login manager
 login_manager = LoginManager()
