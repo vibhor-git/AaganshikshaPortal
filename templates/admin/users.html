@@ -102,7 +102,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Role</label>
-                        {{ form.role(class="form-select") }}
+                        {{ form.role(class="form-select", id="role") }}
                         {% if form.role.errors %}
                             <div class="text-danger">
                                 {% for error in form.role.errors %}
@@ -113,7 +113,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Aadhar Number</label>
-                        {{ form.aadhar_number(class="form-control", placeholder="Enter 12-digit Aadhar Number") }}
+                        {{ form.aadhar_number(class="form-control", placeholder="Enter 12-digit Aadhar number") }}
                         {% if form.aadhar_number.errors %}
                             <div class="text-danger">
                                 {% for error in form.aadhar_number.errors %}
@@ -122,6 +122,35 @@
                             </div>
                         {% endif %}
                     </div>
+                    <div class="mb-3" id="center-field">
+                        <label class="form-label">Center (required for teachers)</label>
+                        {{ form.center_id(class="form-control") }}
+                        {% if form.center_id.errors %}
+                            <div class="text-danger">
+                                {% for error in form.center_id.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <script>
+                        // Show/hide center field based on role selection
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const roleSelect = document.getElementById('role');
+                            const centerField = document.getElementById('center-field');
+
+                            function toggleCenterField() {
+                                if (roleSelect.value === 'teacher') {
+                                    centerField.style.display = 'block';
+                                } else {
+                                    centerField.style.display = 'none';
+                                }
+                            }
+
+                            toggleCenterField(); // Initial state
+                            roleSelect.addEventListener('change', toggleCenterField);
+                        });
+                    </script>
                     <div class="d-flex justify-content-between">
                         <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">Cancel</a>
                         {{ form.submit(class="btn btn-primary") }}
@@ -140,6 +169,7 @@
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Center</th>
                                 <th>Created</th>
                                 <th>Actions</th>
                             </tr>
@@ -150,10 +180,15 @@
                                     <tr>
                                         <td>{{ user.username }}</td>
                                         <td>{{ user.email }}</td>
+                                        <td>{{ user.role|capitalize }}</td>
                                         <td>
-                                            <span class="badge {% if user.role == 'admin' %}bg-danger{% else %}bg-info{% endif %}">
-                                                {{ user.role|capitalize }}
-                                            </span>
+                                            {% if user.role == 'teacher' and user.center %}
+                                                {{ user.center.name }}
+                                            {% elif user.role == 'teacher' %}
+                                                <span class="text-warning">Not assigned</span>
+                                            {% else %}
+                                                <span class="text-muted">N/A</span>
+                                            {% endif %}
                                         </td>
                                         <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
                                         <td>
@@ -167,7 +202,7 @@
                                                     </button>
                                                 {% endif %}
                                             </div>
-                                            
+
                                             <!-- Delete Modal -->
                                             <div class="modal fade" id="deleteModal{{ user.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ user.id }}" aria-hidden="true">
                                                 <div class="modal-dialog">
@@ -194,7 +229,7 @@
                                 {% endfor %}
                             {% else %}
                                 <tr>
-                                    <td colspan="5" class="text-center">No users found.</td>
+                                    <td colspan="6" class="text-center">No users found.</td>
                                 </tr>
                             {% endif %}
                         </tbody>

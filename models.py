@@ -12,8 +12,10 @@ class User(UserMixin, db.Model):
     role = db.Column(db.String(20), nullable=False)  # 'admin', 'teacher'
     aadhar_number = db.Column(db.String(12), unique=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    center_id = db.Column(db.Integer, db.ForeignKey('center.id'), nullable=True)  # Only required for teachers
     
     # Relationships
+    center = db.relationship('Center', backref='teachers', lazy=True)
     complaints = db.relationship('Complaint', backref='author', lazy=True)
     nutrition_tips = db.relationship('NutritionTip', backref='created_by', lazy=True)
     activities = db.relationship('Activity', backref='created_by', lazy=True)

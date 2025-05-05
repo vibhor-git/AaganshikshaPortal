@@ -66,13 +66,21 @@ def users():
 def add_user():
     form = UserForm()
     
+    # Populate center choices
+    form.center_id.choices = [(0, 'None')] + [(c.id, c.name) for c in Center.query.all()]
+    
     if form.validate_on_submit():
         user = User(
             username=form.username.data,
             email=form.email.data,
-            role=form.role.data
+            role=form.role.data,
+            aadhar_number=form.aadhar_number.data
         )
         user.set_password(form.password.data)
+        
+        # Set center_id only if the role is teacher and a center was selected
+        if form.role.data == 'teacher' and form.center_id.data != 0:
+            user.center_id = form.center_id.data
         
         db.session.add(user)
         db.session.commit()
@@ -89,11 +97,21 @@ def edit_user(id):
     user = User.query.get_or_404(id)
     form = EditUserForm(original_username=user.username, original_email=user.email)
     
+    # Populate center choices
+    form.center_id.choices = [(0, 'None')] + [(c.id, c.name) for c in Center.query.all()]
+    
     if form.validate_on_submit():
         user.username = form.username.data
         user.email = form.email.data
         user.role = form.role.data
+        user.aadhar_number = form.aadhar_number.data
         
+        # Set center_id based on role and selection
+        if form.role.data == 'teacher' and form.center_id.data != 0:
+            user.center_id = form.center_id.data
+        else:
+            user.center_id = None
+            
         if form.password.data:
             user.set_password(form.password.data)
         
@@ -105,6 +123,8 @@ def edit_user(id):
         form.username.data = user.username
         form.email.data = user.email
         form.role.data = user.role
+        form.aadhar_number.data = user.aadhar_number
+        form.center_id.data = user.center_id or 0
     
     return render_template('admin/users.html', form=form, user=user, is_edit=True)
 

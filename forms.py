@@ -23,6 +23,7 @@ class UserForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     role = SelectField('Role', choices=[('admin', 'Admin'), ('teacher', 'Teacher')])
     aadhar_number = StringField('Aadhar Number', validators=[DataRequired(), Length(min=12, max=12)])
+    center_id = SelectField('Center (required for teachers)', coerce=int, validators=[Optional()])
     submit = SubmitField('Save User')
     
     def validate_aadhar_number(self, aadhar_number):
@@ -46,6 +47,7 @@ class EditUserForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     role = SelectField('Role', choices=[('admin', 'Admin'), ('teacher', 'Teacher')])
     aadhar_number = StringField('Aadhar Number', validators=[DataRequired(), Length(min=12, max=12)])
+    center_id = SelectField('Center (required for teachers)', coerce=int, validators=[Optional()])
     password = PasswordField('New Password (leave blank to keep current)', validators=[Optional(), Length(min=6)])
     confirm_password = PasswordField('Confirm New Password', validators=[EqualTo('password')])
     submit = SubmitField('Update User')
