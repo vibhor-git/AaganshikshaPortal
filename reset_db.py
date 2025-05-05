@@ -11,12 +11,10 @@ def reset_database():
     WARNING: This will delete all data in the database!
     """
     print("⚠️ WARNING: This will delete ALL existing data in the database! ⚠️")
-    print("It is recommended to backup your data before proceeding.")
+    print("Automatic confirmation: Database will be reset now.")
     
-    confirm = input("Type 'YES' to confirm deletion of all data: ")
-    if confirm != "YES":
-        print("Operation cancelled. No changes were made.")
-        return False
+    # Skip confirmation for automated reset
+    confirm = "YES"
     
     try:
         # Drop all tables
