@@ -98,6 +98,17 @@
                         {% endif %}
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Aadhar Number</label>
+                        {{ form.aadhar_number(class="form-control", placeholder="Enter 12-digit Aadhar Number") }}
+                        {% if form.aadhar_number.errors %}
+                            <div class="text-danger">
+                                {% for error in form.aadhar_number.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Center</label>
                         {{ form.center_id(class="form-select") }}
                         {% if form.center_id.errors %}
