@@ -521,28 +521,28 @@ section {
     .no-print, .no-print * {
         display: none !important;
     }
-    
+
     header, footer, .btn, nav, .card-header {
         display: none !important;
     }
-    
+
     .card {
         border: none !important;
         box-shadow: none !important;
     }
-    
+
     .container {
         width: 100% !important;
         max-width: none !important;
         padding: 0 !important;
         margin: 0 !important;
     }
-    
+
     body {
         background-color: white !important;
         font-size: 12pt;
     }
-    
+
     table {
         width: 100% !important;
     }
@@ -553,11 +553,11 @@ section {
     .hero-section {
         padding: 4rem 0;
     }
-    
+
     .hero-title {
         font-size: 2rem;
     }
-    
+
     .section-title {
         font-size: 1.75rem;
     }
@@ -567,34 +567,53 @@ section {
     h1 {
         font-size: 1.75rem;
     }
-    
+
     h2 {
         font-size: 1.5rem;
     }
-    
+
     .hero-section {
         padding: 3rem 0;
         text-align: center;
     }
-    
+
     .hero-title {
         font-size: 1.75rem;
     }
-    
+
     .card-title {
         font-size: 1.25rem;
     }
-    
+
     .table-responsive {
         font-size: 0.875rem;
     }
-    
+
     .btn-group-sm .btn {
         padding: 0.25rem 0.5rem;
         font-size: 0.75rem;
     }
-    
+
     .summary-value {
         font-size: 1.5rem;
     }
+}
+
+/* Custom modal styles for complaint and user modals */
+.modal.show {
+    display: block; 
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.custom-modal {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop {
+    display: none;
+}
+
+.no-fade {
+    animation: none !important; /* Remove fade animation */
+    transition: none !important; /* Remove transition */
 }

@@ -91,8 +91,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const modalTriggers = document.querySelectorAll(`[data-bs-target="#${modal.id}"]`);
             modalTriggers.forEach(trigger => {
                 trigger.addEventListener('click', function() {
-                    const modalInstance = new bootstrap.Modal(modal);
-                    modalInstance.show();
+                    // Show modal manually without bootstrap
+                    modal.style.display = 'block';
+                    modal.classList.add('show');
+                    document.body.classList.add('modal-open');
+                });
+            });
+            
+            // Set up close buttons for this modal
+            const closeButtons = modal.querySelectorAll('.close-modal, .btn-close');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                    modal.classList.remove('show');
+                    document.body.classList.remove('modal-open');
                 });
             });
             
