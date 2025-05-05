@@ -43,10 +43,10 @@
                             </td>
                             <td>{{ complaint.created_at.strftime('%Y-%m-%d') }}</td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#viewComplaintModal{{ complaint.id }}">
+                                <button type="button" class="btn btn-sm btn-primary view-complaint-btn" data-bs-toggle="modal" data-bs-target="#viewComplaintModal{{ complaint.id }}">
                                     <i class="fas fa-eye"></i> View
                                 </button>
-                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#updateStatusModal{{ complaint.id }}">
+                                <button type="button" class="btn btn-sm btn-success update-status-btn" data-bs-toggle="modal" data-bs-target="#updateStatusModal{{ complaint.id }}">
                                     <i class="fas fa-edit"></i> Update Status
                                 </button>
                             </td>
@@ -108,8 +108,8 @@
                                     <form action="{{ url_for('admin.update_complaint_status', id=complaint.id) }}" method="post">
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <label for="status" class="form-label">Status</label>
-                                                <select class="form-select" id="status" name="status" required>
+                                                <label for="status{{ complaint.id }}" class="form-label">Status</label>
+                                                <select class="form-select" id="status{{ complaint.id }}" name="status" required>
                                                     <option value="pending" {% if complaint.status == 'pending' %}selected{% endif %}>Pending</option>
                                                     <option value="in-progress" {% if complaint.status == 'in-progress' %}selected{% endif %}>In Progress</option>
                                                     <option value="resolved" {% if complaint.status == 'resolved' %}selected{% endif %}>Resolved</option>
@@ -131,4 +131,51 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Prevent modal from auto-closing and flickering
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(function(modal) {
+            modal.addEventListener('shown.bs.modal', function() {
+                // Focus on the first form element when modal is shown
+                const firstInput = this.querySelector('input, select, textarea');
+                if (firstInput) {
+                    firstInput.focus();
+                }
+            });
+            
+            // Prevent backdrop clicks from closing modal
+            const modalInstance = new bootstrap.Modal(modal, {
+                backdrop: 'static',
+                keyboard: false
+            });
+        });
+        
+        // Improve click handling
+        const viewButtons = document.querySelectorAll('.view-complaint-btn');
+        viewButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-bs-target');
+                const modalElement = document.querySelector(targetId);
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            });
+        });
+        
+        const updateButtons = document.querySelectorAll('.update-status-btn');
+        updateButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-bs-target');
+                const modalElement = document.querySelector(targetId);
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            });
+        });
+    });
+</script>
 {% endblock %}

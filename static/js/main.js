@@ -82,6 +82,34 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!form.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
+
+    // Modal stabilization
+    const pageModals = document.querySelectorAll('.modal');
+    if (pageModals.length > 0) {
+        pageModals.forEach(function(modal) {
+            modal.addEventListener('shown.bs.modal', function() {
+                // Stop animation once modal is shown
+                modal.classList.remove('fade');
+                
+                // Ensure body doesn't shift
+                document.body.style.paddingRight = '0px';
+                
+                // Focus on first input if exists
+                const firstInput = modal.querySelector('input, select, textarea');
+                if (firstInput) {
+                    setTimeout(() => {
+                        firstInput.focus();
+                    }, 100);
+                }
+            });
+            
+            modal.addEventListener('hidden.bs.modal', function() {
+                // Re-add fade class for next opening
+                modal.classList.add('fade');
+            });
+        });
+    }
+
             }
             form.classList.add('was-validated');
         }, false);
