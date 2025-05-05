@@ -1,8 +1,7 @@
 import os
 import logging
 
-from flask import Flask
-import os, g
+from flask import Flask, g
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
