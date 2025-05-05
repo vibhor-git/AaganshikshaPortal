@@ -136,33 +136,43 @@
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Prevent modal from auto-closing and flickering
+        // Configure all modals first - with anti-flicker options
         const modals = document.querySelectorAll('.modal');
+        const modalInstances = {};
+        
         modals.forEach(function(modal) {
-            modal.addEventListener('shown.bs.modal', function() {
-                // Focus on the first form element when modal is shown
-                const firstInput = this.querySelector('input, select, textarea');
-                if (firstInput) {
-                    firstInput.focus();
-                }
-            });
+            // Remove fade class to prevent flickering
+            modal.classList.remove('fade');
             
-            // Prevent backdrop clicks from closing modal
-            const modalInstance = new bootstrap.Modal(modal, {
+            // Initialize with static backdrop and no keyboard exit
+            modalInstances[modal.id] = new bootstrap.Modal(modal, {
                 backdrop: 'static',
                 keyboard: false
             });
+            
+            // Focus management for form elements
+            modal.addEventListener('shown.bs.modal', function() {
+                const firstInput = this.querySelector('input, select, textarea');
+                if (firstInput) {
+                    setTimeout(() => firstInput.focus(), 50);
+                }
+                
+                // Prevent body shift
+                document.body.style.paddingRight = '0px';
+            });
         });
         
-        // Improve click handling
+        // Improve click handling with pre-configured instances
         const viewButtons = document.querySelectorAll('.view-complaint-btn');
         viewButtons.forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                const targetId = this.getAttribute('data-bs-target');
-                const modalElement = document.querySelector(targetId);
-                const modal = new bootstrap.Modal(modalElement);
-                modal.show();
+                e.stopPropagation();
+                
+                const targetId = this.getAttribute('data-bs-target').substring(1); // Remove the #
+                if (modalInstances[targetId]) {
+                    modalInstances[targetId].show();
+                }
             });
         });
         
@@ -170,10 +180,12 @@
         updateButtons.forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                const targetId = this.getAttribute('data-bs-target');
-                const modalElement = document.querySelector(targetId);
-                const modal = new bootstrap.Modal(modalElement);
-                modal.show();
+                e.stopPropagation();
+                
+                const targetId = this.getAttribute('data-bs-target').substring(1); // Remove the #
+                if (modalInstances[targetId]) {
+                    modalInstances[targetId].show();
+                }
             });
         });
     });

@@ -96,6 +96,35 @@ a {
     background-color: rgba(59, 191, 248, 0.1) !important;
 }
 
+/* Modal fixes to prevent flickering */
+.modal {
+    animation: none !important;
+    transition: opacity 0.15s linear !important;
+}
+
+.modal-backdrop {
+    animation: none !important;
+    transition: opacity 0.15s linear !important;
+}
+
+.modal.show {
+    transform: none !important;
+    transition: none !important;
+}
+
+.modal-dialog {
+    transform: none !important;
+    transition: none !important;
+    margin: 1.75rem auto !important;
+}
+
+/* Prevent body shifting when modal opens */
+body.modal-open {
+    padding-right: 0 !important;
+    overflow: auto !important;
+}
+
+
 .bg-soft-warning {
     background-color: rgba(251, 189, 35, 0.1) !important;
 }
