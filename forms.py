@@ -22,7 +22,14 @@ class UserForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     role = SelectField('Role', choices=[('admin', 'Admin'), ('teacher', 'Teacher')])
+    aadhar_number = StringField('Aadhar Number', validators=[DataRequired(), Length(min=12, max=12)])
     submit = SubmitField('Save User')
+    
+    def validate_aadhar_number(self, aadhar_number):
+        if not aadhar_number.data.isdigit():
+            raise ValidationError('Aadhar number must contain only digits')
+        if len(aadhar_number.data) != 12:
+            raise ValidationError('Aadhar number must be exactly 12 digits')
     
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
@@ -38,9 +45,16 @@ class EditUserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=64)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     role = SelectField('Role', choices=[('admin', 'Admin'), ('teacher', 'Teacher')])
+    aadhar_number = StringField('Aadhar Number', validators=[DataRequired(), Length(min=12, max=12)])
     password = PasswordField('New Password (leave blank to keep current)', validators=[Optional(), Length(min=6)])
     confirm_password = PasswordField('Confirm New Password', validators=[EqualTo('password')])
     submit = SubmitField('Update User')
+    
+    def validate_aadhar_number(self, aadhar_number):
+        if not aadhar_number.data.isdigit():
+            raise ValidationError('Aadhar number must contain only digits')
+        if len(aadhar_number.data) != 12:
+            raise ValidationError('Aadhar number must be exactly 12 digits')
     
     def __init__(self, original_username, original_email, *args, **kwargs):
         super(EditUserForm, self).__init__(*args, **kwargs)
@@ -73,8 +87,15 @@ class StudentForm(FlaskForm):
     parent_name = StringField('Parent Name', validators=[DataRequired(), Length(min=2, max=100)])
     parent_contact = StringField('Parent Contact', validators=[DataRequired(), Length(max=15)])
     address = StringField('Address', validators=[DataRequired(), Length(min=5, max=200)])
+    aadhar_number = StringField('Aadhar Number', validators=[DataRequired(), Length(min=12, max=12)])
     center_id = SelectField('Center', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Save Student')
+    
+    def validate_aadhar_number(self, aadhar_number):
+        if not aadhar_number.data.isdigit():
+            raise ValidationError('Aadhar number must contain only digits')
+        if len(aadhar_number.data) != 12:
+            raise ValidationError('Aadhar number must be exactly 12 digits')
 
 class InventoryForm(FlaskForm):
     item_name = StringField('Item Name', validators=[DataRequired(), Length(min=2, max=100)])
@@ -117,3 +138,11 @@ class ReportForm(FlaskForm):
     start_date = DateField('Start Date', format='%Y-%m-%d', validators=[Optional()])
     end_date = DateField('End Date', format='%Y-%m-%d', validators=[Optional()])
     submit = SubmitField('Generate Report')
+
+class InventoryRequestForm(FlaskForm):
+    item_name = StringField('Item Name', validators=[DataRequired(), Length(min=2, max=100)])
+    quantity = IntegerField('Quantity', validators=[DataRequired()])
+    unit = StringField('Unit', validators=[DataRequired(), Length(max=20)])
+    description = TextAreaField('Description', validators=[Optional()])
+    center_id = SelectField('Center', coerce=int, validators=[DataRequired()])
+    submit = SubmitField('Submit Request')

@@ -9,12 +9,19 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
     role = db.Column(db.String(20), nullable=False)  # 'admin', 'teacher'
+    aadhar_number = db.Column(db.String(12), unique=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
     complaints = db.relationship('Complaint', backref='author', lazy=True)
     nutrition_tips = db.relationship('NutritionTip', backref='created_by', lazy=True)
     activities = db.relationship('Activity', backref='created_by', lazy=True)
+    
+    @validates('aadhar_number')
+    def validate_aadhar_number(self, key, aadhar_number):
+        if not aadhar_number.isdigit() or len(aadhar_number) != 12:
+            raise ValueError('Aadhar number must be exactly 12 digits')
+        return aadhar_number
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -48,12 +55,19 @@ class Student(db.Model):
     parent_name = db.Column(db.String(100))
     parent_contact = db.Column(db.String(15))
     address = db.Column(db.String(200))
+    aadhar_number = db.Column(db.String(12), unique=True, nullable=False)
     enrollment_date = db.Column(db.Date, default=datetime.utcnow)
     center_id = db.Column(db.Integer, db.ForeignKey('center.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relationships
     attendance_records = db.relationship('Attendance', backref='student', lazy=True)
+    
+    @validates('aadhar_number')
+    def validate_aadhar_number(self, key, aadhar_number):
+        if not aadhar_number.isdigit() or len(aadhar_number) != 12:
+            raise ValueError('Aadhar number must be exactly 12 digits')
+        return aadhar_number
 
 class Inventory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -66,7 +80,7 @@ class Inventory(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class NutritionTip(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -75,7 +89,7 @@ class NutritionTip(db.Model):
     is_active = db.Column(db.Boolean, default=True)
 
 class Activity(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     date = db.Column(db.Date, nullable=False)
@@ -107,3 +121,15 @@ class Complaint(db.Model):
     status = db.Column(db.String(20), default='pending')  # 'pending', 'resolved', 'in-progress'
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     resolved_at = db.Column(db.DateTime)
+
+class InventoryRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    item_name = db.Column(db.String(100), nullable=False)
+    quantity = db.Column(db.Integer, default=0)
+    unit = db.Column(db.String(20))
+    description = db.Column(db.Text)
+    center_id = db.Column(db.Integer, db.ForeignKey('center.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    status = db.Column(db.String(20), default='pending')  # 'pending', 'approved', 'rejected'
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

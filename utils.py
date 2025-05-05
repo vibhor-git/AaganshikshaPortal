@@ -38,14 +38,16 @@ def initialize_demo_data():
     admin = User(
         username='admin',
         email='admin@aaganshiksha.org',
-        role='admin'
+        role='admin',
+        aadhar_number='123456789012'
     )
     admin.password_hash = generate_password_hash('admin123')
     
     teacher = User(
         username='teacher',
         email='teacher@aaganshiksha.org',
-        role='teacher'
+        role='teacher',
+        aadhar_number='987654321012'
     )
     teacher.password_hash = generate_password_hash('teacher123')
     
@@ -72,6 +74,8 @@ def initialize_demo_data():
     
     for i, name in enumerate(student_names):
         center_id = centers[i % 2].id  # Alternate between centers
+        # Generate a unique 12-digit Aadhar number for each student
+        aadhar = f'{(i+1):012d}'
         student = Student(
             name=name,
             age=random.randint(3, 6),
@@ -79,6 +83,7 @@ def initialize_demo_data():
             parent_name=f'Parent of {name}',
             parent_contact=f'98765{i:05d}',
             address=f'{i+100} Park Avenue, City {i%3 + 1}',
+            aadhar_number=aadhar,
             center_id=center_id,
             enrollment_date=datetime.utcnow().date() - timedelta(days=random.randint(10, 100))
         )
