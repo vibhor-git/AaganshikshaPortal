@@ -83,34 +83,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 event.preventDefault();
                 event.stopPropagation();
 
-    // Modal stabilization
-    const pageModals = document.querySelectorAll('.modal');
-    if (pageModals.length > 0) {
-        pageModals.forEach(function(modal) {
-            // Set up modal triggers
-            const modalTriggers = document.querySelectorAll(`[data-bs-target="#${modal.id}"]`);
-            modalTriggers.forEach(trigger => {
-                trigger.addEventListener('click', function() {
-                    // Show modal manually without bootstrap
-                    modal.style.display = 'block';
-                    modal.classList.add('show');
-                    document.body.classList.add('modal-open');
-                });
-            });
+    // Modal handling - complete rewrite
+    document.addEventListener('DOMContentLoaded', function() {
+        // Find all modals
+        const pageModals = document.querySelectorAll('.modal, .custom-modal');
+        
+        if (pageModals.length > 0) {
+            // Create backdrop if it doesn't exist
+            let modalBackdrop = document.querySelector('.modal-backdrop');
+            if (!modalBackdrop) {
+                modalBackdrop = document.createElement('div');
+                modalBackdrop.className = 'modal-backdrop';
+                document.body.appendChild(modalBackdrop);
+                modalBackdrop.style.display = 'none';
+            }
             
-            // Set up close buttons for this modal
-            const closeButtons = modal.querySelectorAll('.close-modal, .btn-close');
-            closeButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    modal.style.display = 'none';
-                    modal.classList.remove('show');
-                    document.body.classList.remove('modal-open');
+            // Function to open modal
+            function openModal(modal) {
+                // Hide all other modals first
+                pageModals.forEach(m => {
+                    m.style.display = 'none';
+                    m.classList.remove('show');
                 });
-            });
-            
-            modal.addEventListener('shown.bs.modal', function() {
-                // Ensure body doesn't shift
-                document.body.style.paddingRight = '0px';
+                
+                // Show this modal
+                modal.style.display = 'block';
+                modal.classList.add('show');
+                document.body.classList.add('modal-open');
+                modalBackdrop.style.display = 'block';
                 
                 // Focus on first input if exists
                 const firstInput = modal.querySelector('input, select, textarea');
@@ -119,9 +119,57 @@ document.addEventListener('DOMContentLoaded', function() {
                         firstInput.focus();
                     }, 100);
                 }
+            }
+            
+            // Function to close modal
+            function closeModal(modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('show');
+                document.body.classList.remove('modal-open');
+                modalBackdrop.style.display = 'none';
+            }
+            
+            // Set up each modal
+            pageModals.forEach(function(modal) {
+                // Set up triggers
+                const modalId = modal.id;
+                const modalTriggers = document.querySelectorAll(`[data-bs-target="#${modalId}"]`);
+                
+                modalTriggers.forEach(trigger => {
+                    trigger.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        openModal(modal);
+                    });
+                });
+                
+                // Set up close buttons
+                const closeButtons = modal.querySelectorAll('.close-modal, .btn-close, [data-dismiss="modal"]');
+                closeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        closeModal(modal);
+                    });
+                });
             });
-        });
-    }
+            
+            // Close modal when clicking on backdrop
+            modalBackdrop.addEventListener('click', function() {
+                const visibleModal = document.querySelector('.modal.show, .custom-modal.show');
+                if (visibleModal) {
+                    closeModal(visibleModal);
+                }
+            });
+            
+            // Close modal on ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const visibleModal = document.querySelector('.modal.show, .custom-modal.show');
+                    if (visibleModal) {
+                        closeModal(visibleModal);
+                    }
+                }
+            });
+        }
+    });
 
             }
             form.classList.add('was-validated');
