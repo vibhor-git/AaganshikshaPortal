@@ -43,22 +43,24 @@
                             </td>
                             <td>{{ complaint.created_at.strftime('%Y-%m-%d') }}</td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-primary view-complaint-btn" data-bs-toggle="modal" data-bs-target="#viewComplaintModal{{ complaint.id }}">
+                                <button type="button" class="btn btn-sm btn-primary view-complaint-btn" 
+                                        onclick="openModal('viewComplaintModal{{ complaint.id }}')">
                                     <i class="fas fa-eye"></i> View
                                 </button>
-                                <button type="button" class="btn btn-sm btn-success update-status-btn" data-bs-toggle="modal" data-bs-target="#updateStatusModal{{ complaint.id }}">
+                                <button type="button" class="btn btn-sm btn-success update-status-btn" 
+                                        onclick="openModal('updateStatusModal{{ complaint.id }}')">
                                     <i class="fas fa-edit"></i> Update Status
                                 </button>
                             </td>
                         </tr>
 
                         <!-- View Complaint Modal -->
-                        <div class="modal fade" id="viewComplaintModal{{ complaint.id }}" tabindex="-1" aria-labelledby="viewComplaintModalLabel{{ complaint.id }}" aria-hidden="true">
+                        <div class="modal" id="viewComplaintModal{{ complaint.id }}" tabindex="-1" aria-labelledby="viewComplaintModalLabel{{ complaint.id }}" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="viewComplaintModalLabel{{ complaint.id }}">Complaint Details</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" onclick="closeModal('viewComplaintModal{{ complaint.id }}')" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
@@ -91,19 +93,19 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary" onclick="closeModal('viewComplaintModal{{ complaint.id }}')">Close</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Update Status Modal -->
-                        <div class="modal fade" id="updateStatusModal{{ complaint.id }}" tabindex="-1" aria-labelledby="updateStatusModalLabel{{ complaint.id }}" aria-hidden="true">
+                        <div class="modal" id="updateStatusModal{{ complaint.id }}" tabindex="-1" aria-labelledby="updateStatusModalLabel{{ complaint.id }}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="updateStatusModalLabel{{ complaint.id }}">Update Complaint Status</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" onclick="closeModal('updateStatusModal{{ complaint.id }}')" aria-label="Close"></button>
                                     </div>
                                     <form action="{{ url_for('admin.update_complaint_status', id=complaint.id) }}" method="post">
                                         <div class="modal-body">
@@ -117,7 +119,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-secondary" onclick="closeModal('updateStatusModal{{ complaint.id }}')">Close</button>
                                             <button type="submit" class="btn btn-success">Update Status</button>
                                         </div>
                                     </form>
@@ -135,59 +137,74 @@
 
 {% block scripts %}
 <script>
+    // Custom modal handling functions that don't rely on Bootstrap's JS
+    function openModal(modalId) {
+        // Get the modal
+        const modal = document.getElementById(modalId);
+        
+        // Show the modal and backdrop
+        document.body.classList.add('modal-open');
+        modal.style.display = 'block';
+        modal.classList.add('show');
+        
+        // Create backdrop if it doesn't exist
+        let backdrop = document.querySelector('.modal-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop show';
+            document.body.appendChild(backdrop);
+        }
+        
+        // Focus the first input in the modal
+        setTimeout(() => {
+            const firstInput = modal.querySelector('input, select, textarea');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }, 100);
+    }
+    
+    function closeModal(modalId) {
+        // Get the modal
+        const modal = document.getElementById(modalId);
+        
+        // Hide the modal
+        modal.style.display = 'none';
+        modal.classList.remove('show');
+        
+        // Check if there are any other open modals
+        const openModals = document.querySelectorAll('.modal.show');
+        if (openModals.length === 0) {
+            // Remove backdrop and modal-open class if no other modals are open
+            document.body.classList.remove('modal-open');
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.parentNode.removeChild(backdrop);
+            }
+        }
+    }
+    
+    // Close modal when clicking outside of it
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal')) {
+            const modalId = event.target.id;
+            closeModal(modalId);
+        }
+    });
+    
+    // Close modal when pressing escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const openModals = document.querySelectorAll('.modal.show');
+            openModals.forEach(modal => {
+                closeModal(modal.id);
+            });
+        }
+    });
+    
+    // Initialize data table if needed
     document.addEventListener('DOMContentLoaded', function() {
-        // Configure all modals first - with anti-flicker options
-        const modals = document.querySelectorAll('.modal');
-        const modalInstances = {};
-        
-        modals.forEach(function(modal) {
-            // Remove fade class to prevent flickering
-            modal.classList.remove('fade');
-            
-            // Initialize with static backdrop and no keyboard exit
-            modalInstances[modal.id] = new bootstrap.Modal(modal, {
-                backdrop: 'static',
-                keyboard: false
-            });
-            
-            // Focus management for form elements
-            modal.addEventListener('shown.bs.modal', function() {
-                const firstInput = this.querySelector('input, select, textarea');
-                if (firstInput) {
-                    setTimeout(() => firstInput.focus(), 50);
-                }
-                
-                // Prevent body shift
-                document.body.style.paddingRight = '0px';
-            });
-        });
-        
-        // Improve click handling with pre-configured instances
-        const viewButtons = document.querySelectorAll('.view-complaint-btn');
-        viewButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const targetId = this.getAttribute('data-bs-target').substring(1); // Remove the #
-                if (modalInstances[targetId]) {
-                    modalInstances[targetId].show();
-                }
-            });
-        });
-        
-        const updateButtons = document.querySelectorAll('.update-status-btn');
-        updateButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const targetId = this.getAttribute('data-bs-target').substring(1); // Remove the #
-                if (modalInstances[targetId]) {
-                    modalInstances[targetId].show();
-                }
-            });
-        });
+        // Any other initialization code can go here
     });
 </script>
 {% endblock %}
