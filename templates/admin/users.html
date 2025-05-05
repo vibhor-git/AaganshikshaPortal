@@ -111,6 +111,17 @@
                             </div>
                         {% endif %}
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Aadhar Number</label>
+                        {{ form.aadhar_number(class="form-control", placeholder="Enter 12-digit Aadhar Number") }}
+                        {% if form.aadhar_number.errors %}
+                            <div class="text-danger">
+                                {% for error in form.aadhar_number.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
                     <div class="d-flex justify-content-between">
                         <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">Cancel</a>
                         {{ form.submit(class="btn btn-primary") }}
