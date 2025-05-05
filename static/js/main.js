@@ -107,6 +107,61 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 
                 // Show this modal
+
+// Custom delete user button handling
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteUserBtns = document.querySelectorAll('.delete-user-btn');
+    
+    deleteUserBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const modalId = btn.getAttribute('data-modal-id');
+            const modal = document.getElementById(modalId);
+            
+            if (modal) {
+                // Create backdrop if needed
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (!backdrop) {
+                    backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop';
+                    document.body.appendChild(backdrop);
+                }
+                
+                // Show modal and backdrop
+                modal.style.display = 'block';
+                backdrop.style.display = 'block';
+                document.body.classList.add('modal-open');
+                
+                // Set up close buttons
+                const closeButtons = modal.querySelectorAll('.close-modal, .btn-close');
+                closeButtons.forEach(closeBtn => {
+                    closeBtn.addEventListener('click', function() {
+                        modal.style.display = 'none';
+                        backdrop.style.display = 'none';
+                        document.body.classList.remove('modal-open');
+                    });
+                });
+                
+                // Close on backdrop click
+                backdrop.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                    backdrop.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                });
+                
+                // Close on ESC key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        modal.style.display = 'none';
+                        backdrop.style.display = 'none';
+                        document.body.classList.remove('modal-open');
+                    }
+                });
+            }
+        });
+    });
+});
+
                 modal.style.display = 'block';
                 modal.classList.add('show');
                 document.body.classList.add('modal-open');
