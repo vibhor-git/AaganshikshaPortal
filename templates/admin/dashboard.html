@@ -157,9 +157,9 @@
                     {% if complaints_count > 0 %}
                         <p>You have {{ complaints_count }} pending complaints that need your attention.</p>
                         <div class="d-grid">
-                            <button class="btn btn-outline-danger">
+                            <a href="{{ url_for('admin.complaints') }}" class="btn btn-outline-danger">
                                 <i class="fas fa-exclamation-triangle me-2"></i> View Complaints
-                            </button>
+                            </a>
                         </div>
                     {% else %}
                         <p>You have no pending complaints at this time.</p>
