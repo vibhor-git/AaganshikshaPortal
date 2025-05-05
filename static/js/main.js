@@ -87,10 +87,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const pageModals = document.querySelectorAll('.modal');
     if (pageModals.length > 0) {
         pageModals.forEach(function(modal) {
+            // Set up modal triggers
+            const modalTriggers = document.querySelectorAll(`[data-bs-target="#${modal.id}"]`);
+            modalTriggers.forEach(trigger => {
+                trigger.addEventListener('click', function() {
+                    const modalInstance = new bootstrap.Modal(modal);
+                    modalInstance.show();
+                });
+            });
+            
             modal.addEventListener('shown.bs.modal', function() {
-                // Stop animation once modal is shown
-                modal.classList.remove('fade');
-                
                 // Ensure body doesn't shift
                 document.body.style.paddingRight = '0px';
                 
@@ -101,11 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         firstInput.focus();
                     }, 100);
                 }
-            });
-            
-            modal.addEventListener('hidden.bs.modal', function() {
-                // Re-add fade class for next opening
-                modal.classList.add('fade');
             });
         });
     }
